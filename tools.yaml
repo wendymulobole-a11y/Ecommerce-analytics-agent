@@ -1,0 +1,47 @@
+sources:
+  ecommerce-bq:
+    kind: bigquery
+    project: project-8908320a-38bd-49a2-ba2
+    location: US
+
+
+tools:
+  total-orders:
+    kind: bigquery-sql
+    source: ecommerce-bq
+    description: Get total number of orders.
+    statement: |
+      SELECT COUNT(*) AS total_orders FROM `bigquery-public-data.thelook_ecommerce.orders`;
+ 
+  revenue-by-date-range:
+    kind: bigquery-sql
+    source: ecommerce-bq
+    description: Calculate total revenue between two dates.
+    parameters:
+      - name: start_date
+        type: string
+        description: Start date in YYYY-MM-DD format.
+      - name: end_date
+        type: string
+        description: End date in YYYY-MM-DD format.
+    statement: |
+      SELECT SUM(sale_price) AS total_revenue FROM `bigquery-public-data.thelook_ecommerce.order_items`
+      WHERE DATE(created_at)
+      BETWEEN PARSE_DATE('%Y-%m-%d', @start_date)
+      AND PARSE_DATE('%Y-%m-%d', @end_date);
+
+  top-products:
+    kind: bigquery-sql
+    source: ecommerce-bq
+    description: Get top selling products by revenue.
+    parameters:
+      - name: limit
+        type: integer
+        description: Number of products to return.
+    statement: |
+      SELECT product_id,
+         SUM(sale_price) AS revenue
+      FROM `bigquery-public-data.thelook_ecommerce.order_items`
+      GROUP BY product_id
+      ORDER BY revenue DESC
+      LIMIT @limit;
