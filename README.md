@@ -125,7 +125,9 @@ adk web
 
 Open the web interface (typically http://localhost:8000) and start querying the agent.
 
-**Technologies Used**
+---
+
+## Technologies Used
 
 Google ADK
 
@@ -137,7 +139,9 @@ BigQuery
 
 Python
 
-**This project demonstrates:**
+---
+
+## This project demonstrates:
 
 Secure LLM-to-database orchestration
 
